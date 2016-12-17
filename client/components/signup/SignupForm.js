@@ -1,7 +1,7 @@
 import React from 'react'
-import {Form, FormGroup, FormControl, Col, ControlLabel, Checkbox, Button} from 'react-bootstrap'
 import timezones from '../../data/timezones'
 import map from 'lodash/map'
+import axios from 'axios'
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -14,39 +14,19 @@ class SignupForm extends React.Component {
       timezone: ''
     }
 
-    this.setUsername = this.setUsername.bind(this);
-    this.setEmail = this.setEmail.bind(this);
-    this.setPassword = this.setPassword.bind(this);
-    this.setPasswordConfirmation = this.setPasswordConfirmation.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
-  setUsername(e) {
+  onChange(e) {
     this.setState({
-      username: e.target.value
+      [e.target.name]: e.target.value
     })
   }
-  setEmail(e) {
-    this.setState({
-      email: e.target.value
-    })
-  }
-  setPassword(e) {
-    this.setState({
-      password: e.target.value
-    })
-  }
-  setPasswordConfirmation(e) {
-    this.setState({
-      passwordConfirmation: e.target.value
-    })
-  }
+
   onSubmit(e) {
     e.preventDefault()
-    console.log(this.state.username.value)
-    console.log(this.state.email.value)
-    console.log(this.state.password.value)
-    console.log(this.state.passwordConfirmation.value)
+    axios.post('/api/users', {user: this.state})
   }
 
   render() {
@@ -54,91 +34,72 @@ class SignupForm extends React.Component {
       <option key={val} value={val}>{key}</option>
     )
     return (
-      <Form onSubmit={this.onSubmit} horizontal>
-        <h1>Join Workouts!</h1>
+      <form onSubmit={this.onSubmit}>
+              <h1>Join our community!</h1>
 
-        <FormGroup>
-          <Col componentClass={ControlLabel} sm={2}>
-            Username
-          </Col>
-          <Col sm={10}>
-            <FormControl
-              inputRef={ value => { this.state.username = value }}
-              onChange={this.setUsername}
-              type="username"
-              placeholder="Username" />
-          </Col>
-        </FormGroup>
+              <div className="form-group">
+                <label className="control-label">Username</label>
+                <input
+                  value={this.state.username}
+                  onChange={this.onChange}
+                  type="text"
+                  name="username"
+                  className="form-control"
+                />
+              </div>
 
-        <FormGroup>
-          <Col componentClass={ControlLabel} sm={2}>
-            Email
-          </Col>
-          <Col sm={10}>
-            <FormControl
-              inputRef={ value => { this.state.email = value }}
-              onChange={this.setUsername}
-              type="email"
-              placeholder="Email" />
-          </Col>
-        </FormGroup>
+              <div className="form-group">
+                <label className="control-label">Email</label>
+                <input
+                  onChange={this.onChange}
+                  value={this.state.email}
+                  type="text"
+                  name="email"
+                  className="form-control"
+                />
+              </div>
 
-        <FormGroup>
-          <Col componentClass={ControlLabel} sm={2}>
-            Password
-          </Col>
-          <Col sm={10}>
-            <FormControl
-              inputRef={ value => { this.state.password = value }}
-              onChange={this.setPassword}
-              type="password"
-              placeholder="Password" />
-          </Col>
-        </FormGroup>
+              <div className="form-group">
+                <label className="control-label">Password</label>
+                <input
+                  onChange={this.onChange}
+                  value={this.state.password}
+                  type="password"
+                  name="password"
+                  className="form-control"
+                />
+              </div>
 
-        <FormGroup>
-          <Col componentClass={ControlLabel} sm={2}>
-            Confirm Password
-          </Col>
-          <Col sm={10}>
-            <FormControl
-              inputRef={ value => { this.state.passwordConfirmation = value }}
-              onChange={this.setPassword}
-              type="password"
-              placeholder="Password" />
-          </Col>
-        </FormGroup>
+              <div className="form-group">
+                <label className="control-label">Password Confirmation</label>
+                <input
+                  onChange={this.onChange}
+                  value={this.state.passwordConfirmation}
+                  type="password"
+                  name="passwordConfirmation"
+                  className="form-control"
+                />
+              </div>
 
-        <FormGroup>
-          <Col componentClass={ControlLabel} sm={2}>
-            Select a Timezone
-          </Col>
-          <Col sm={10}>
-            <FormControl
-              inputRef={ value => { this.state.passwordConfirmation = value }}
-              onChange={this.setPassword}
-              componentClass="select">
-              <option value="select">Select a timezone...</option>
-              {options}
-              </FormControl>
-          </Col>
-        </FormGroup>
+              <div className="form-group">
+                <label className="control-label">Timezone</label>
+                <select
+                  className="form-control"
+                  name="timezone"
+                  onChange={this.onChange}
+                  value={this.state.timezone}
+                >
+                  <option value="" disabled>Choose Your Timezone</option>
+                  {options}
+                </select>
+              </div>
 
-        <FormGroup>
-          <Col smOffset={2} sm={10}>
-            <Checkbox>Remember me</Checkbox>
-          </Col>
-        </FormGroup>
-
-        <FormGroup>
-          <Col smOffset={2} sm={10}>
-            <Button type="submit">
-              Sign Up
-            </Button>
-          </Col>
-        </FormGroup>
-
-      </Form>
+              <div className="form-group">
+                <button className="btn btn-primary btn-lg">
+                  Sign up
+                </button>
+              </div>
+            </form>
     )
   }
 }
