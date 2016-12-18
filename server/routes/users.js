@@ -11,20 +11,36 @@ let router = express.Router()
 function validateInput(data, otherValidations) {
   let { errors } = otherValidations(data)
 
-  return Promise.all([
-    User.where({ email: data.email }).fetch().then(user => {
-      if (user) { errors.email = "That email is already in use";}
-    }),
-    User.where({ username: data.username }).fetch().then(user => {
-      if (user) { errors.username = "That username is already in use";}
-    })
-  ]).then(() => {
-      return {
-        errors,
-        isValid: isEmpty(errors)
+  return User.query({
+    where: { email: data.email },
+    orWhere: { username: data.username }
+  }).fetch().then( user => {
+    if (user) {
+      if (user.get('username') === data.username) {
+        errors.username = 'That username is already in use'
       }
+      if (user.get('email') === data.email) {
+        errors.email = 'That email is already in use'
+      }
+    }
+
+    return {
+      errors,
+      isValid: isEmpty(errors)
+    }
   })
+
 }
+
+router.get('/:identifier', (req, res) => {
+  User.query({
+    select: [ 'username', 'email' ],
+    where: { email: req.params.identifier },
+    orWhere: { username: req.params.identifier }
+  }).fetch().then(user => {
+    res.json({ user })
+  })
+})
 
 router.post('/', (req, res) => {
   validateInput(req.body, commonValidations).then(({ errors, isValid }) => {
