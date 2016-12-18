@@ -43,7 +43,9 @@ class SignupForm extends React.Component {
     if (this.isValid()) {
       this.setState({ errors: {}, isLoading: true })
       this.props.userSignupRequest(this.state).then(
-        () => {},
+        () => {
+          this.context.router.push('/')
+        },
         ({ data }) => this.setState({ errors: data, isLoading: false })
       )
     }
@@ -80,6 +82,7 @@ class SignupForm extends React.Component {
                 onChange={this.onChange}
                 value={this.state.password}
                 field="password"
+                type="password"
               />
 
               <TextFieldGroup
@@ -88,15 +91,21 @@ class SignupForm extends React.Component {
                 onChange={this.onChange}
                 value={this.state.passwordConfirmation}
                 field="passwordConfirmation"
+                type="password"
               />
 
-              <TextFieldGroup
-                error={errors.timezone}
-                label="Timezone"
-                onChange={this.onChange}
-                value={this.state.timezone}
-                field="timezone"
-              />
+              <div className={classnames("form-group", { 'has-error': errors.timezone })}>
+                <label className="control-label">Timezone</label>
+                <select
+                  className="form-control"
+                  name="timezone"
+                  onChange={this.onChange}
+                  value={this.state.timezone}>
+                  <option value="" disabled>Choose Your Timezone</option>
+                  {options}
+                </select>
+                {errors.timezone && <span className="help-block">{errors.timezone}</span>}
+              </div>
 
               <div className="form-group">
                 <button disabled={this.state.isLoading} className="btn btn-primary btn-lg">
@@ -110,6 +119,10 @@ class SignupForm extends React.Component {
 
 SignupForm.propTypes = {
   userSignupRequest:  React.PropTypes.func.isRequired
+}
+
+SignupForm.contextTypes = {
+  router: React.PropTypes.object.isRequired
 }
 
 export default SignupForm
