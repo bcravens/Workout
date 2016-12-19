@@ -1,13 +1,13 @@
-import React from 'react';
-import timezones from '../../data/timezones';
-import map from 'lodash/map';
-import classnames from 'classnames';
-import validateInput from '../../../server/shared/validations/signup';
-import TextFieldGroup from '../common/TextFieldGroup';
+import React from 'react'
+import timezones from '../../data/timezones'
+import map from 'lodash/map'
+import classnames from 'classnames'
+import validateInput from '../../../server/shared/validations/signup'
+import TextFieldGroup from '../common/TextFieldGroup'
 
 class SignupForm extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       username: '',
       email: '',
@@ -19,67 +19,67 @@ class SignupForm extends React.Component {
       invalid: false
     }
 
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.checkUserExists = this.checkUserExists.bind(this);
+    this.onChange = this.onChange.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
+    this.checkUserExists = this.checkUserExists.bind(this)
   }
 
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ [e.target.name]: e.target.value })
   }
 
   isValid() {
-    const { errors, isValid } = validateInput(this.state);
+    const { errors, isValid } = validateInput(this.state)
 
     if (!isValid) {
-      this.setState({ errors });
+      this.setState({ errors })
     }
 
-    return isValid;
+    return isValid
   }
 
   checkUserExists(e) {
-    const field = e.target.name;
-    const val = e.target.value;
+    const field = e.target.name
+    const val = e.target.value
     if (val !== '') {
       this.props.isUserExists(val).then(res => {
-        let errors = this.state.errors;
-        let invalid;
+        let errors = this.state.errors
+        let invalid
         if (res.data.user) {
-          errors[field] = 'There is user with such ' + field;
-          invalid = true;
+          errors[field] = 'There is user with such ' + field
+          invalid = true
         } else {
-          errors[field] = '';
-          invalid = false;
+          errors[field] = ''
+          invalid = false
         }
-        this.setState({ errors, invalid });
-      });
+        this.setState({ errors, invalid })
+      })
     }
   }
 
   onSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     if (this.isValid()) {
-      this.setState({ errors: {}, isLoading: true });
+      this.setState({ errors: {}, isLoading: true })
       this.props.userSignupRequest(this.state).then(
         () => {
           this.props.addFlashMessage({
             type: 'success',
             text: 'You signed up successfully. Welcome!'
-          });
-          this.context.router.push('/');
+          })
+          this.context.router.push('/')
         },
         (err) => this.setState({ errors: err.response.data, isLoading: false })
-      );
+      )
     }
   }
 
   render() {
-    const { errors } = this.state;
+    const { errors } = this.state
     const options = map(timezones, (val, key) =>
       <option key={val} value={val}>{key}</option>
-    );
+    )
     return (
       <form onSubmit={this.onSubmit}>
         <h1>Join our community!</h1>
@@ -140,7 +140,7 @@ class SignupForm extends React.Component {
           </button>
         </div>
       </form>
-    );
+    )
   }
 }
 
@@ -154,4 +154,4 @@ SignupForm.contextTypes = {
   router: React.PropTypes.object.isRequired
 }
 
-export default SignupForm;
+export default SignupForm

@@ -1,5 +1,5 @@
-import React from 'react';
-import EventForm from './EventForm';
+import React from 'react'
+import EventForm from './EventForm'
 
 class NewEventPage extends React.Component {
   render() {
@@ -7,8 +7,8 @@ class NewEventPage extends React.Component {
       <div>
         <EventForm />
       </div>
-    );
+    )
   }
 }
 
-export default NewEventPage;
+export default NewEventPage

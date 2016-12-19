@@ -1,6 +1,6 @@
-import React from 'react';
-import NavBar from './NavBar';
-import FlashMessagesList from './flash/FlashMessagesList';
+import React from 'react'
+import NavBar from './NavBar'
+import FlashMessagesList from './flash/FlashMessagesList'
 
 class App extends React.Component {
   render() {
@@ -10,8 +10,8 @@ class App extends React.Component {
         <FlashMessagesList />
         {this.props.children}
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
